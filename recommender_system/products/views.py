@@ -41,6 +41,6 @@ class ProductReviewsView(APIView):
         serializer = ReviewSerializer(data=request.data)
 
         if serializer.is_valid():
-            review = serializer.save(author=self.request.user, product=product)
+            review = serializer.save(author=request.user, product=product)
             return Response({'id': review.id}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

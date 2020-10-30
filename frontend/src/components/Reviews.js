@@ -13,7 +13,7 @@ const Reviews = (props) => {
             try {
                 const res = await axios.get(`${process.env.REACT_APP_API_URL}/api/reviews/${pk}`);
                 setReviews(res.data);
-                console.log(pk)
+                console.log("reviews", pk)
             }
             catch (err) {
             }
@@ -56,7 +56,7 @@ const Reviews = (props) => {
                     <div >
                         <div >
                             <h3>{review.created_by.username}</h3>
-                            <span>{review.rate}     {drawStars(review.rate)}</span>
+                            <span>{review.rate}{drawStars(review.rate)}</span>
                         </div>
                         <div>
                             <p>{review.text}</p>

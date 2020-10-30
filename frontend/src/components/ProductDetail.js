@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Reviews from './Reviews';
 import AddReview from './AddReview';
+import { Route, Switch, Link } from 'react-router-dom';
+import AddNewReview from './AddNewReview';
 
 
 const ProductDetail = (props) => {
@@ -24,21 +26,26 @@ const ProductDetail = (props) => {
         }
 
         fetchData();
+
     }, [props.match.params.id]);
 
-
-
+  
     const createProduct = () => {
         return {__html: product.text};
     };
+
+    
 
     return (
         <div className='container mt-3'>
             <h1 className='display-2'>{product.title}</h1>
             <div className='mt-5 mb-5' dangerouslySetInnerHTML={createProduct()} />
+            <div>{product.id}</div>
             <hr />
-            <AddReview productId={product.id}/>
+            
+            <AddNewReview productId={product.id}/>
             <Reviews productId={product.id}/>
+           
         </div>
     );
 }

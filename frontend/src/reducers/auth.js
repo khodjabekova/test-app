@@ -5,6 +5,7 @@ import {
     LOGIN_SUCCESS,
     LOGIN_FAIL,
     LOGOUT_SUCCESS,
+    LOGOUT_FAIL,
     REGISTER_SUCCESS,
     REGISTER_FAIL,
   } from '../actions/types';
@@ -30,6 +31,7 @@ import {
           isLoading: false,
           user: action.payload,
         };
+      case LOGIN_FAIL:
       case LOGIN_SUCCESS:
       case REGISTER_SUCCESS:
         localStorage.setItem('token', action.payload.token);
@@ -40,8 +42,14 @@ import {
           isLoading: false,
         };
       case AUTH_ERROR:
-      case LOGIN_FAIL:
-      case LOGOUT_SUCCESS:
+        localStorage.removeItem('token');
+        return {
+          ...state,
+          token: null,
+          user: null,
+          isAuthenticated: false,
+          isLoading: false,
+        };
       case REGISTER_FAIL:
         localStorage.removeItem('token');
         return {
@@ -51,6 +59,8 @@ import {
           isAuthenticated: false,
           isLoading: false,
         };
+      case LOGOUT_SUCCESS:
+      case LOGOUT_FAIL:
       default:
         return state;
     }

@@ -8,20 +8,39 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT_SUCCESS,
+  LOGOUT_FAIL,
   REGISTER_SUCCESS,
   REGISTER_FAIL,
 } from './types';
 
 
+export const loadUser = () => (dispatch, getState) => {
+  dispatch({ type: USER_LOADING });
+
+  axios
+    .get(`${process.env.REACT_APP_API_URL}/api/user`, tokenConfig(getState))
+    .then((res) => {
+      dispatch({
+        type: USER_LOADED,
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({
+        type: AUTH_ERROR,
+      });
+    });
+};
+
+
 export const login = (username, password) => (dispatch) => {
-    // Headers
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
   
-    // Request Body
     const body = JSON.stringify({ username, password });
   
     axios
@@ -69,32 +88,31 @@ export const signup = ({ username, password }) => (dispatch) => {
 };
 
 export const logout = () => (dispatch, getState) => {
+
   axios
-    .post(`${process.env.REACT_APP_API_URL}/logout/`, null, tokenConfig(getState))
+    .post(`${process.env.REACT_APP_API_URL}/api/logout/`, null, tokenConfig(getState))
     .then((res) => {
-      dispatch({ type: 'CLEAR_LEADS' });
       dispatch({
         type: LOGOUT_SUCCESS,
       });
     })
     .catch((err) => {
       dispatch(returnErrors(err.response.data, err.response.status));
+      dispatch({
+        type: LOGOUT_FAIL,
+      });
     });
 };
 
-// Setup config with token - helper function
 export const tokenConfig = (getState) => {
-    // Get token from state
     const token = getState().auth.token;
   
-    // Headers
     const config = {
       headers: {
         'Content-Type': 'application/json',
       },
     };
   
-    // If token, add to headers config
     if (token) {
       config.headers['Authorization'] = `Token ${token}`;
     }
